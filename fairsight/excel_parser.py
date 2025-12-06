@@ -1,12 +1,10 @@
 """Utilities for transforming governance Excel workbooks into JSON config."""
 from __future__ import annotations
-
 from dataclasses import dataclass
 from pathlib import Path
 import json
 import re
 from typing import Dict, Iterable, List, Sequence
-
 import pandas as pd
 
 # Regular expression to detect gate sheets such as ``G0_Initiation`` or ``G1-Design``
@@ -18,7 +16,6 @@ _DOMAIN_MAPPING_SHEETS = {
     "G3_DOMAIN_MAPPING",
     "DOMAIN_CHECKLIST_MAP",
 }
-
 
 @dataclass
 class FieldSchema:
@@ -37,18 +34,15 @@ class FieldSchema:
             "required": self.required,
         }
 
-
 def _normalize_identifier(value: str) -> str:
     """Normalize a string for case-insensitive sheet lookups."""
 
     return re.sub(r"[^a-z0-9]+", "", value.lower())
 
-
 def _normalize_sheet_name(sheet_name: str) -> str:
     """Normalize sheet names for comparisons."""
 
     return sheet_name.strip().upper().replace(" ", "_")
-
 
 def _split_artifact_cell(value) -> List[str]:
     """Split an artifact cell into a list of artifact names."""
@@ -61,7 +55,6 @@ def _split_artifact_cell(value) -> List[str]:
     # Fall back to a string representation for unexpected types
     text = str(value).strip()
     return [text] if text else []
-
 
 def _append_unique(target: List[str], items: Iterable[str]) -> None:
     """Append items to the target list while preserving order and uniqueness."""
@@ -90,7 +83,6 @@ def infer_widget_type(label: str) -> str:
     if any(keyword in text for keyword in ("description", "objective")):
         return "textarea"
     return "text"
-
 
 def _slugify_field_name(label: str) -> str:
     """Transform a human-readable field label into a machine-friendly key."""
@@ -278,4 +270,5 @@ def main(args: Sequence[str] | None = None) -> None:
 
 
 if __name__ == "__main__":
+
     main()
